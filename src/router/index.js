@@ -22,20 +22,19 @@ const router = new Router({
     {
       path: "/dashboard",
       name: "Dashboard",
-      component: Dashboard,
-      meta: { authorize: ["Admin", "User", "Manager"] }
+      component: Dashboard
     },
     {
       path: "/news",
       name: "ListNews",
       component: ListNews,
-      meta: { authorize: ["Admin", "Manager"] }
+      meta: { authorize: ["Admin", "Manager", "User"] }
     },
     {
       path: "/news/create",
       name: "CreateNews",
       component: CreateNews,
-      meta: { authorize: ["Admin", "Manager"] }
+      meta: { authorize: ["Admin"] }
     },
     {
       path: "/news/edit/:id",

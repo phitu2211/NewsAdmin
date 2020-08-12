@@ -1,10 +1,7 @@
 <template>
   <div class="table-responsive list-news">
     <div style="display:flex; margin-bottom:10px;">
-      <div
-        class="col-md-1"
-        style="padding-left:15px;padding-right:0;padding-top:4px;"
-      >
+      <div class="col-md-1" style="padding-left:15px;padding-right:0;padding-top:4px;">
         <label>Ngày Tạo:</label>
       </div>
       <div class="col-md-5">
@@ -21,19 +18,11 @@
         />
       </div>
       <div class="col-md-6" style="padding-left:0; padding-right:0;">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Title"
-          v-model="objFilter.title"
-        />
+        <input type="text" class="form-control" placeholder="Title" v-model="objFilter.title" />
       </div>
     </div>
     <div style="display:flex; margin-bottom:10px;">
-      <div
-        class="col-md-1"
-        style="padding-left:15px;padding-right:0;padding-top:4px;"
-      >
+      <div class="col-md-1" style="padding-left:15px;padding-right:0;padding-top:4px;">
         <label>Ngày Sửa:</label>
       </div>
       <div class="col-md-5">
@@ -96,36 +85,25 @@
     <div style="display:flex; margin-bottom:10px;">
       <div class="col-md-6" style="text-align:left; padding-left:0;">
         <ul class="pagination">
-          <li
-            class="page-item"
-            v-bind:class="{ disabled: !response.hasPreviousPage }"
-          >
+          <li class="page-item" v-bind:class="{ disabled: !response.hasPreviousPage }">
             <a class="page-link" aria-label="Previous" v-on:click="prePage">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
           <li class="page-item" v-show="objFilter.pageNumber - 1 > 0">
-            <a class="page-link" v-on:click="prePage">
-              {{ objFilter.pageNumber - 1 }}
-            </a>
+            <a class="page-link" v-on:click="prePage">{{ objFilter.pageNumber - 1 }}</a>
           </li>
           <li class="page-item" style="color:blue;">
-            <a class="page-link currentPage" style="cursor:context-menu;">{{
+            <a class="page-link currentPage" style="cursor:context-menu;">
+              {{
               objFilter.pageNumber
-            }}</a>
-          </li>
-          <li
-            class="page-item"
-            v-show="objFilter.pageNumber + 1 <= response.totalPage"
-          >
-            <a class="page-link" v-on:click="nextPage">
-              {{ objFilter.pageNumber + 1 }}
+              }}
             </a>
           </li>
-          <li
-            class="page-item"
-            v-bind:class="{ disabled: !response.hasNextPage }"
-          >
+          <li class="page-item" v-show="objFilter.pageNumber + 1 <= response.totalPage">
+            <a class="page-link" v-on:click="nextPage">{{ objFilter.pageNumber + 1 }}</a>
+          </li>
+          <li class="page-item" v-bind:class="{ disabled: !response.hasNextPage }">
             <a class="page-link" aria-label="Next" v-on:click="nextPage">
               <span aria-hidden="true">&raquo;</span>
             </a>
@@ -170,7 +148,7 @@ export default {
         return {
           id: node.id,
           label: node.name,
-          children: node.subCategories
+          children: node.subCategories,
         };
       },
       newsSelected: {},
@@ -179,7 +157,7 @@ export default {
       objFilter: {
         title: "",
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 5,
       },
       rangeSeparator: "Đến",
       dayStr: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
@@ -191,18 +169,18 @@ export default {
         arrowOffsetScaling: 1,
         popperOptions: {
           placement: "bottom-start",
-          positionFixed: true
+          positionFixed: true,
           // more options in https://popper.js.org
-        }
-      }
+        },
+      },
     };
   },
   methods: {
-    logCreateTime: function(val) {
+    logCreateTime: function (val) {
       this.createTime = val;
       console.log(val);
     },
-    logUpdateTime: function(val) {
+    logUpdateTime: function (val) {
       this.updateTime = val;
       console.log(val);
     },
@@ -213,7 +191,7 @@ export default {
       this.objFilter = {
         title: "",
         pageNumber: 1,
-        pageSize: 5
+        pageSize: 5,
       };
       this.searchNews();
     },
@@ -226,71 +204,73 @@ export default {
       this.searchNews();
     },
     searchNews() {
+      this.objFilter.categoryIds = this.listCategory;
       let filter = JSON.stringify(this.objFilter);
+      console.log(this.objFilter);
       axios
         .get("/news?filter=" + filter)
-        .then(response => {
+        .then((response) => {
           this.response = response.data;
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     },
     getNews(id) {
       axios
         .get("/news/" + id)
-        .then(response => {
+        .then((response) => {
           if (response.data.status == "Sucess") {
             this.newsSelected = response.data.data;
           }
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     },
     deleteNews(id) {
       axios
         .delete("/news/" + id)
-        .then(response => {
+        .then((response) => {
           if (response.data.status == "Sucess") {
             this.response.data = this.response.data.filter(
-              post => post.id != id
+              (post) => post.id != id
             );
           }
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(error);
         });
     },
     loadOptions({ action, parentNode, callback }) {
       if (action === LOAD_CHILDREN_OPTIONS) callback();
-    }
+    },
   },
   components: {
     Treeselect,
     News,
     Datepicker,
-    DateRangePicker
+    DateRangePicker,
   },
   mounted() {
     axios
       .get("/news?filter={pageNumber: 1,pageSize: 5}")
-      .then(response => {
+      .then((response) => {
         this.response = response.data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
     axios
       .get("/categories?filter={}")
-      .then(response => {
+      .then((response) => {
         this.optionsCategory = response.data.data;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   },
-  computed: {}
+  computed: {},
 };
 </script>
 <style>

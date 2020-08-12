@@ -34,7 +34,7 @@ export default {
   mounted() {
     var postData = { roleNames: JSON.parse(localStorage.getItem("user")).role };
     axios
-      .get("/menus?filter={}")
+      .post("/menu/role",postData)
       .then(response => {
         this.response = response.data;
       })
